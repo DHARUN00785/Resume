@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mobile Accessories Store</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#f4f4f4;
+}
+
+header{
+    background:#0f172a;
+    color:white;
+    padding:15px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    margin-left:20px;
+    font-weight:bold;
+}
+
+.hero{
+    background:linear-gradient(135deg,#2563eb,#1e40af);
+    color:white;
+    text-align:center;
+    padding:80px 20px;
+}
+
+.hero h1{
+    font-size:40px;
+    margin-bottom:10px;
+}
+
+.hero p{
+    font-size:18px;
+}
+
+.products{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+    padding:40px;
+}
+
+.product{
+    background:white;
+    border-radius:10px;
+    padding:20px;
+    text-align:center;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+.product img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+    border-radius:10px;
+}
+
+.product h3{
+    margin:10px 0;
+}
+
+.product p{
+    font-size:18px;
+    color:#2563eb;
+    margin-bottom:10px;
+}
+
+.product button{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:10px 15px;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.product button:hover{
+    background:#1d4ed8;
+}
+
+.cart{
+    background:white;
+    margin:20px;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+}
+
+.modal-content{
+    background:white;
+    width:400px;
+    margin:40px auto;
+    padding:20px;
+    border-radius:10px;
+}
+
+.modal-content h2{
+    text-align:center;
+    margin-bottom:15px;
+}
+
+.modal-content input,
+.modal-content textarea{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border:1px solid #ccc;
+    border-radius:5px;
+}
+
+.modal-content button{
+    width:100%;
+    padding:10px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.close{
+    float:right;
+    font-size:24px;
+    cursor:pointer;
+}
+
+.error{
+    color:red;
+    margin-top:10px;
+}
+
+.success{
+    color:green;
+    margin-top:10px;
+}
+
+footer{
+    background:#0f172a;
+    color:white;
+    text-align:center;
+    padding:15px;
+    margin-top:30px;
+}
+
+#welcomeUser{
+    color:#22c55e;
+    font-weight:bold;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h2>📱 Mobile Accessories Store</h2>
+
+    <nav>
+        <a href="#">Home</a>
+        <a href="#products">Products</a>
+        <a href="#" onclick="openLogin()">Login</a>
+        <a href="#" onclick="openRegister()">Register</a>
+        <a href="#cart">Cart</a>
+    </nav>
+</header>
+
+<section class="hero">
+    <h1>Premium Mobile Accessories</h1>
+    <p>Cases • Chargers • Earbuds • Power Banks</p>
+    <br>
+    <h3 id="welcomeUser"></h3>
+</section>
+
+<section id="products" class="products">
+
+    <div class="product">
+        <img src="https://images.unsplash.com/photo-1606229365485-93a3b8ee0385?w=500" alt="">
+        <h3>Wireless Earbuds</h3>
+        <p>₹999</p>
+        <button onclick="addToCart('Wireless Earbuds',999)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+        <img src="https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=500" alt="">
+        <h3>Fast Charger</h3>
+        <p>₹499</p>
+        <button onclick="addToCart('Fast Charger',499)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+        <img src="https://images.unsplash.com/photo-1601593346740-925612772716?w=500" alt="">
+        <h3>Phone Case</h3>
+        <p>₹299</p>
+        <button onclick="addToCart('Phone Case',299)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+        <img src="https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=500" alt="">
+        <h3>Power Bank</h3>
+        <p>₹1499</p>
+        <button onclick="addToCart('Power Bank',1499)">Add to Cart</button>
+    </div>
+
+</section>
+
+<section class="cart" id="cart">
+    <h2>🛒 Shopping Cart</h2>
+    <br>
+    <div id="cartItems"></div>
+    <br>
+    <h3 id="total"></h3>
+</section>
+
+<!-- LOGIN MODAL -->
+<div class="modal" id="loginModal">
+<div class="modal-content">
+
+<span class="close" onclick="closeModal()">&times;</span>
+
+<h2>Login</h2>
+
+<input type="email" id="loginEmail" placeholder="Email">
+<input type="password" id="loginPassword" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+<p id="loginMsg"></p>
+
+</div>
+</div>
+
+<!-- REGISTER MODAL -->
+<div class="modal" id="registerModal">
+<div class="modal-content">
+
+<span class="close" onclick="closeModal()">&times;</span>
+
+<h2>Register</h2>
+
+<input type="text" id="name" placeholder="Full Name">
+<input type="email" id="email" placeholder="Email">
+<input type="text" id="phone" placeholder="Mobile Number">
+
+<textarea id="address" rows="3"
+placeholder="Delivery Address"></textarea>
+
+<input type="text" id="city" placeholder="City">
+<input type="text" id="state" placeholder="State">
+<input type="text" id="pincode" placeholder="Pincode">
+
+<input type="password" id="password" placeholder="Password">
+
+<button onclick="registerUser()">Register</button>
+
+<p id="registerMsg"></p>
+
+</div>
+</div>
+
+<footer>
+    <p>© 2026 Mobile Accessories Store. All Rights Reserved.</p>
+</footer>
+
+<script>
+
+function openLogin(){
+    document.getElementById("loginModal").style.display="block";
+}
+
+function openRegister(){
+    document.getElementById("registerModal").style.display="block";
+}
+
+function closeModal(){
+    document.getElementById("loginModal").style.display="none";
+    document.getElementById("registerModal").style.display="none";
+}
+
+function registerUser(){
+
+    let name=document.getElementById("name").value.trim();
+    let email=document.getElementById("email").value.trim();
+    let phone=document.getElementById("phone").value.trim();
+    let address=document.getElementById("address").value.trim();
+    let city=document.getElementById("city").value.trim();
+    let state=document.getElementById("state").value.trim();
+    let pincode=document.getElementById("pincode").value.trim();
+    let password=document.getElementById("password").value.trim();
+
+    let msg=document.getElementById("registerMsg");
+
+    if(name=="" || email=="" || phone=="" || address=="" ||
+       city=="" || state=="" || pincode=="" || password==""){
+
+        msg.innerHTML="<span class='error'>All fields are required!</span>";
+        return;
+    }
+
+    let users=JSON.parse(localStorage.getItem("users")) || [];
+
+    let existingUser=users.find(user=>user.email===email);
+
+    if(existingUser){
+        msg.innerHTML="<span class='error'>Email already registered!</span>";
+        return;
+    }
+
+    users.push({
+        name,
+        email,
+        phone,
+        address,
+        city,
+        state,
+        pincode,
+        password
+    });
+
+    localStorage.setItem("users",JSON.stringify(users));
+
+    msg.innerHTML="<span class='success'>Registration Successful!</span>";
+
+    document.getElementById("name").value="";
+    document.getElementById("email").value="";
+    document.getElementById("phone").value="";
+    document.getElementById("address").value="";
+    document.getElementById("city").value="";
+    document.getElementById("state").value="";
+    document.getElementById("pincode").value="";
+    document.getElementById("password").value="";
+}
+
+function login(){
+
+    let email=document.getElementById("loginEmail").value.trim();
+    let password=document.getElementById("loginPassword").value.trim();
+
+    let users=JSON.parse(localStorage.getItem("users")) || [];
+
+    let user=users.find(
+        u=>u.email===email && u.password===password
+    );
+
+    if(user){
+
+        localStorage.setItem(
+            "loggedInUser",
+            JSON.stringify(user)
+        );
+
+        document.getElementById("loginMsg").innerHTML=
+        "<span class='success'>Login Successful!</span>";
+
+        document.getElementById("welcomeUser").innerHTML=
+        "Welcome, " + user.name;
+
+        setTimeout(()=>{
+            closeModal();
+        },1000);
+
+    }else{
+        document.getElementById("loginMsg").innerHTML=
+        "<span class='error'>Invalid Email or Password</span>";
+    }
+}
+
+function addToCart(product,price){
+
+    let currentUser=localStorage.getItem("loggedInUser");
+
+    if(!currentUser){
+        alert("Please login first.");
+        return;
+    }
+
+    let cart=JSON.parse(localStorage.getItem("cart")) || [];
+
+    cart.push({
+        product,
+        price
+    });
+
+    localStorage.setItem("cart",JSON.stringify(cart));
+
+    displayCart();
+
+    alert(product + " added to cart.");
+}
+
+function displayCart(){
+
+    let cart=JSON.parse(localStorage.getItem("cart")) || [];
+
+    let output="";
+    let total=0;
+
+    cart.forEach(item=>{
+
+        output += `
+        <p>
+            ${item.product}
+            - ₹${item.price}
+        </p>
+        `;
+
+        total += item.price;
+    });
+
+    document.getElementById("cartItems").innerHTML=output;
+    document.getElementById("total").innerHTML=
+    "Total Amount : ₹" + total;
+}
+
+window.onload=function(){
+
+    displayCart();
+
+    let user=
+    JSON.parse(localStorage.getItem("loggedInUser"));
+
+    if(user){
+        document.getElementById("welcomeUser").innerHTML=
+        "Welcome, " + user.name;
+    }
+}
+</script>
+
+</body>
+</html>
